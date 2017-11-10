@@ -15,6 +15,8 @@
 
 #define INT 100
 
+#define INTERRORINIT 500
+
 void setup(){
    initPins();
 }
@@ -56,20 +58,20 @@ void moveMotors(double left, double right){
 }
 
 void changeSide(double error, int *side){
-  static unsigned int timeError=0, intError=500;
+  static unsigned int timeError=0, intError=INTERRORINIT;
 
   if(error!=0){
     if(millis()-timeError>=intError){
       *(side)*=-1;
 
-      intError=1000;
+      intError*=2;
       
       timeError=millis();
     }
   }else{
     timeError=millis();
 
-    intError=500;
+    intError=INTERRORINIT;
   }
 }
 
