@@ -52,12 +52,14 @@ void seguirLinha(){
   switch(estado){
     case 0: if(valSensor()==0) estado=1;
     
-            moveMotors(70, 0);
+            moveMotors(100, 0);
+            delay(50);
             break;
             
     case 1: if(valSensor()==0) estado=0;
             
-            moveMotors(0, 70);
+            moveMotors(0, 100);
+            delay(50);
             break;
   }
 }
