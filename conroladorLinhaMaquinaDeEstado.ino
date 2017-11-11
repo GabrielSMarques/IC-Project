@@ -48,18 +48,33 @@ void moveMotors(double left, double right){
 
 void seguirLinha(){
   static int estado=0;
+  static boolean firstTime0=true, firstTime1=true;
 
   switch(estado){
-    case 0: if(valSensor()==0) estado=1;
-    
-            moveMotors(100, 0);
-            delay(50);
+    case 0: firstTime1=true;
+            
+            if(valSensor()==0) estado=1;
+
+            if(firstTime0){
+              moveMotors(100, 0);
+              delay(50); 
+
+              firstTime0=false;
+            }
+            else moveMotors(50, 0);
             break;
             
-    case 1: if(valSensor()==0) estado=0;
-            
-            moveMotors(0, 100);
-            delay(50);
+    case 1: firstTime0=true;
+    
+            if(valSensor()==0) estado=0;
+
+            if(firstTime1){
+              moveMotors(0, 100);
+              delay(50); 
+
+              firstTime1=false;
+            }
+            else moveMotors(0, 50);
             break;
   }
 }
@@ -67,4 +82,3 @@ void seguirLinha(){
 void loop() {
   seguirLinha();
 }
-
