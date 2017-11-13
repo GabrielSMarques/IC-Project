@@ -48,7 +48,7 @@ void moveMotors(double left, double right){
 
 void stopMotors(){
   moveMotors(-10, -10);
-  delay(50);  
+  delay(100);  
 }
 
 void seguirLinha(){
@@ -60,11 +60,11 @@ void seguirLinha(){
               estado=1;
               
               if(!tryCorrec1){
-                moveMotors(70, 0);
+                moveMotors(60, 0);
                 delay(250);
               }
               else{
-                moveMotors(70, 0);
+                moveMotors(60, 0);
                 delay(100);
               }
               
@@ -92,11 +92,11 @@ void seguirLinha(){
               estado=0;
               
               if(!tryCorrec2){
-                moveMotors(0, 70);
+                moveMotors(0, 60);
                 delay(250); 
               }
               else{
-                moveMotors(0, 70);
+                moveMotors(0, 60);
                 delay(100); 
               }
               
