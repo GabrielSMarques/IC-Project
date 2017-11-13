@@ -46,35 +46,78 @@ void moveMotors(double left, double right){
   analogWrite(Motor_DV, abs(right));
 }
 
+void stopMotors(){
+  moveMotors(-10, -10);
+  delay(50);  
+}
+
 void seguirLinha(){
   static int estado=0;
-  static boolean firstTime0=true, firstTime1=true;
+  static boolean outInercia1=true, outInercia2=true, tryCorrec1=false, tryCorrec2=false;
 
   switch(estado){
-    case 0: firstTime1=true;
-            
-            if(valSensor()==0) estado=1;
+    case 0: if(valSensor()==0){
+              estado=1;
+              
+              if(!tryCorrec1){
+                moveMotors(70, 0);
+                delay(250);
+              }
+              else{
+                moveMotors(70, 0);
+                delay(100);
+              }
+              
+              stopMotors();
 
-            if(firstTime0){
-              moveMotors(100, 0);
-              delay(50); 
+              outInercia1=true;
 
-              firstTime0=false;
+              tryCorrec1=false;
             }
-            else moveMotors(50, 0);
+            else{
+              tryCorrec1=true;
+              
+              if(outInercia1){
+                moveMotors(100, 0);
+                delay(50);
+
+                outInercia1=false;
+              }
+              
+              moveMotors(50, 0);
+            }
             break;
             
-    case 1: firstTime0=true;
-    
-            if(valSensor()==0) estado=0;
+    case 1: if(valSensor()==0){
+              estado=0;
+              
+              if(!tryCorrec2){
+                moveMotors(0, 70);
+                delay(250); 
+              }
+              else{
+                moveMotors(0, 70);
+                delay(100); 
+              }
+              
+              stopMotors();
 
-            if(firstTime1){
-              moveMotors(0, 100);
-              delay(50); 
+              outInercia2=true;
 
-              firstTime1=false;
+              tryCorrec2=false;
             }
-            else moveMotors(0, 50);
+            else{
+              tryCorrec2=true;
+              
+              if(outInercia2){
+                moveMotors(0, 100);
+                delay(50);
+
+                outInercia2=false;
+              }
+              
+              moveMotors(0, 50);
+            }
             break;
   }
 }
