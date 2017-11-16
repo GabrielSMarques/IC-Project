@@ -89,7 +89,7 @@
 #define NOTE_DS8 4978
 
 // Buzzer
-int speakerPin = 13;
+#define speakerPin 13
 
 #define Motor_E1 8
 #define Motor_E2 7
@@ -218,148 +218,80 @@ void seguirLinha(){
 }
 
 void GameOfThrones(){
-  static byte estado=0, cont=0;
-  static unsigned int tempo=millis();
+  static int estado=0, cont=0;
+  static unsigned int tempo=0;
 
   switch(estado){
-    case 0: if(millis()-tempo<=500){
-              tone(speakerPin, NOTE_G4);
+    case 0: if(millis()-tempo<=500) tone(speakerPin, NOTE_G4);
+            else if(millis()-tempo<=1000) tone(speakerPin, NOTE_C4); 
+            else if(millis()-tempo<=1250) tone(speakerPin, NOTE_DS4);
+            else if(millis()-tempo<=1500) tone(speakerPin, NOTE_F4);
+            else{
+              cont++;
               tempo=millis();
             }
-            else if(millis()-tempo<=500){
-              tone(speakerPin, NOTE_C4);
-              tempo=millis();          
-            }
-            else if(millis()-tempo<=250){
-              tone(speakerPin, NOTE_DS4);
-              tempo=millis();          
-            }
-            else if(millis()-tempo<=250){
-              tone(speakerPin, NOTE_F4);
-              tempo=millis();
-            }
-            cont++;
+            
             if(cont>=4){
               cont=0;
               estado=1;
             }
             break;
 
-    case 1: if(millis()-tempo<=500){
-              tone(speakerPin, NOTE_G4);
+    case 1: if(millis()-tempo<=500) tone(speakerPin, NOTE_G4);
+            else if(millis()-tempo<=1000) tone(speakerPin, NOTE_C4);
+            else if(millis()-tempo<=1250) tone(speakerPin, NOTE_E4);
+            else if(millis()-tempo<=1500) tone(speakerPin, NOTE_F4);
+            else{
+              cont++;
               tempo=millis();
             }
-            else if(millis()-tempo<=500){
-              tone(speakerPin, NOTE_C4);
-              tempo=millis();          
-            }
-            else if(millis()-tempo<=250){
-              tone(speakerPin, NOTE_E4);
-              tempo=millis();          
-            }
-            else if(millis()-tempo<=250){
-              tone(speakerPin, NOTE_F4);
-              tempo=millis();
-            }
-            cont++;
+            
             if(cont>=4){
               cont=0;
               estado=2;
             }
             break;
 
-                    
+    case 2: if(millis()-tempo<=500) tone(speakerPin, NOTE_G4);
+            else if(millis()-tempo<=1000) tone(speakerPin, NOTE_C4);          
+            else if(millis()-tempo<=1250) tone(speakerPin, NOTE_DS4);    
+            else if(millis()-tempo<=1500) tone(speakerPin, NOTE_F4);
+            else if(millis()-tempo<=2000) tone(speakerPin, NOTE_D4);
+            estado=3;
+            break;  
+
+    case 3: if(millis()-tempo<=500) tone(speakerPin, NOTE_G3);
+            else if(millis()-tempo<=750) tone(speakerPin, NOTE_AS3);
+            else if(millis()-tempo<=1000) tone(speakerPin, NOTE_C4);
+            else if(millis()-tempo<=1500) tone(speakerPin, NOTE_D4);
+            else{
+              cont++;
+              tempo=millis();
+            }
+            
+            if(cont>=3){
+              cont=0;
+              estado=4;
+            }
+            break;      
+
+    case 4: if(millis()-tempo<=500) tone(speakerPin, NOTE_G3);
+            else if(millis()-tempo<=750) tone(speakerPin, NOTE_AS3);          
+            else if(millis()-tempo<=1000) tone(speakerPin, NOTE_C4);    
+            else if(millis()-tempo<=2000) tone(speakerPin, NOTE_D4);
+            else if(millis()-tempo<=3000) tone(speakerPin, NOTE_F4);
+            else if(millis()-tempo<=4000) tone(speakerPin, NOTE_AS3);
+            else if(millis()-tempo<=4250) tone(speakerPin, NOTE_DS4);
+            else if(millis()-tempo<=4500) tone(speakerPin, NOTE_D4);
+            else if(millis()-tempo<=5500) tone(speakerPin, NOTE_F4);
+            else if(millis()-tempo<=6500) tone(speakerPin, NOTE_AS3);
+            else if(millis()-tempo<=6750) tone(speakerPin, NOTE_DS4);
+            else if(millis()-tempo<=7000) tone(speakerPin, NOTE_D4);
+            else if(millis()-tempo<=7500) tone(speakerPin, NOTE_C4);
+            estado=0;//Mudar Aqui
+            break;                       
   }
-  
-  tone(speakerPin, NOTE_G4);
-  delay(500);
-  noTone(speakerPin);
-     
-  tone(speakerPin, NOTE_C4);
-  delay(500);
-  
-  tone(speakerPin, NOTE_DS4);
-  delay(250);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_F4);
-  delay(250);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_D4);
-  delay(500);
-  noTone(speakerPin);
-  
-  for(int i=0; i<3; i++) {
-    tone(speakerPin, NOTE_G3);
-    delay(500);
-    noTone(speakerPin);
-    
-    tone(speakerPin, NOTE_AS3);
-    delay(250);
-    noTone(speakerPin);
-    
-    tone(speakerPin, NOTE_C4);
-    delay(250);
-    noTone(speakerPin);
-    
-    tone(speakerPin, NOTE_D4);
-    delay(500);
-    noTone(speakerPin);
-  }
-  
-  tone(speakerPin, NOTE_G3);
-  delay(500);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_AS3);
-  delay(250);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_C4);
-  delay(250);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_D4);
-  delay(1000);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_F4);
-  delay(1000);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_AS3);
-  delay(1000);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_DS4);
-  delay(250);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_D4);
-  delay(250);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_F4);
-  delay(1000);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_AS3);
-  delay(1000);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_DS4);
-  delay(250);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_D4);
-  delay(250);
-  noTone(speakerPin);
-  
-  tone(speakerPin, NOTE_C4);
-  delay(500);
-  noTone(speakerPin);
-  
+  /*
   for(int i=0; i<3; i++) {
     tone(speakerPin, NOTE_GS3);
     delay(250);
@@ -430,11 +362,10 @@ void GameOfThrones(){
     tone(speakerPin, NOTE_D4);
     delay(500);
     noTone(speakerPin);
-  }
+  }*/
 }
 
 void loop() {
   seguirLinha();
-
   GameOfThrones();
 }
