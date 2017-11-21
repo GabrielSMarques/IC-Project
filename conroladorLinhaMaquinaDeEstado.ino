@@ -1,3 +1,7 @@
+#include "Ultrasonic.h"
+#define echoPin 10 //Pino 10 recebe o pulso do echo
+#define trigPin 9 //Pino 9 envia o pulso para gerar o echo
+
 #define Motor_E1 8
 #define Motor_E2 7
 #define Motor_EV 6
@@ -6,7 +10,12 @@
 #define Motor_D1 3
 #define SENOP 2
 
+Ultrasonic ultrasonic(9,10);
+
 void setup(){
+  Serial.begin(9600);
+  pinMode(echoPin, INPUT); // define o pino 10 como entrada (recebe)
+  pinMode(trigPin, OUTPUT); // define o pino 9 como saida (envia)
    initPins();
 }
 
@@ -47,8 +56,31 @@ void moveMotors(double left, double right){
 }
 
 void stopMotors(){
-  moveMotors(-10, -10);
-  delay(100);  
+  moveMotors(-50, -50);
+  delay(10);
+  moveMotors(50, 50);
+  delay(10);
+  moveMotors(0, 0);
+}
+
+int calDist() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  int distancia = (ultrasonic.Ranging(CM));
+
+  return distancia;
+}
+
+void swap(int *vel1, int *vel2){
+  int aux=*vel1;
+  
+  *vel1=*vel2;
+  
+  *vel2=aux;
 }
 
 void seguirLinha(){
@@ -60,11 +92,13 @@ void seguirLinha(){
               estado=1;
               
               if(!tryCorrec1){
-                moveMotors(60, 0);
-                delay(250);
+                moveMotors(80, 0);
+                delay(200);
               }
               else{
-                moveMotors(60, 0);
+                stopMotors();
+                delay(250);
+                moveMotors(80, 0);
                 delay(100);
               }
               
@@ -92,12 +126,14 @@ void seguirLinha(){
               estado=0;
               
               if(!tryCorrec2){
-                moveMotors(0, 60);
-                delay(250); 
+                moveMotors(0, 80);
+                delay(200); 
               }
               else{
-                moveMotors(0, 60);
-                delay(100); 
+                stopMotors();
+                delay(250);
+                moveMotors(0, 80);
+                delay(100);
               }
               
               stopMotors();
@@ -123,5 +159,49 @@ void seguirLinha(){
 }
 
 void loop() {
-  seguirLinha();
+  int distancia=calDist();
+  
+  if(distancia<=8){
+    stopMotors();
+    moveMotors(-100,100);
+    delay(50);
+    moveMotors(-50,50);
+    while(calDist()<20); 
+    delay(200);
+    stopMotors();
+    
+    moveMotors(100, 100);//move
+    delay(50);
+    moveMotors(60,50);
+    delay(1000);
+    stopMotors();
+
+    moveMotors(100,-100);//angulo
+    delay(50);
+    moveMotors(50,-50);
+    delay(500);
+    stopMotors();
+    delay(3000);
+    
+    /*moveMotors(30,30);//move
+    delay(50);
+    moveMotors(30,30);
+    delay(500);
+    moveMotors(100,-100);//angulo
+    delay(50);
+    moveMotors(40,-40);
+    delay(500);
+    moveMotors(30,30);//move
+    delay(50);
+    moveMotors(30,30);
+    delay(500);
+    moveMotors(-100,100);//angulo
+    delay(50);
+    moveMotors(-40,40);
+    delay(500);
+    stopMotors();
+    seguirLinha();*/
+  }else{
+    seguirLinha();
+  }
 }
