@@ -40,9 +40,9 @@ void seguidorDeLinha(){
   static int estado = 0;
   static double forcaD, forcaE, linhaE, linhaD;
 
-  if(valSensor()==0) {
-    moverMotor(linhaE, linhaD);
+  if(valSensor()==0){    
     while(valSensor()==0);
+    
     switch (estado) {
       case 0:
         //agora ele está na esquerda
@@ -64,6 +64,7 @@ void seguidorDeLinha(){
         break;
     }
   }
+  
   moverMotor(forcaE,forcaD);
 }
 
@@ -101,13 +102,13 @@ void mover(char side, int tempo){
   boost(side);
   
   switch(side){
-    case 'd': moverMotor(40, -40);
+    case 'd': moverMotor(50, -50);
               break;
 
-    case 'e': moverMotor(-40, 40);
+    case 'e': moverMotor(-50, 50);
               break;   
 
-    case 'f': moverMotor(40, 40);
+    case 'f': moverMotor(50, 50);
               break;             
   }
 
