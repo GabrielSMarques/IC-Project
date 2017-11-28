@@ -221,13 +221,15 @@ void seguidorDeLinha(){
               darBoost=false;
             }
     
-            moverMotor(velOutLine1, velOutLine2);
+            moverMotor('e', velOutLine1);
+            moverMotor('d', velOutLine2);
     
             if(valSensor()==0) estado=1;
             
             break;
             
-    case 1: moverMotor(velInLine1, velInLine2);
+    case 1: moverMotor('e', velInLine1);
+            moverMotor('d', velInLine2);
 
             if(valSensor()==1){
               estado=0;
