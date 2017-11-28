@@ -16,10 +16,6 @@ Ultrasonic ultrasonic(9,10);
 #define Motor_D1 3
 #define SENOP 2
 
-#define FORCAM 55
-#define FORCAm 0
-#define FORCAmed 15
-
 #define TEMPO 500
 
 void initPins(){
@@ -128,81 +124,78 @@ void boostMotor(char side, char direc){
   if(direc=='f') moverMotor(side, 100);
   else moverMotor(side, -100);
 
-  delay(50);
+  delay(25);
 }
 
 void mover(char side, int tempo){
   switch(side){
-    case 'd': moverMotor('d', -50);
-              moverMotor('e', 50);
+    case 'd': moverMotor('d', -30);
+              moverMotor('e', 30);
               break;
 
-    case 'e': moverMotor('d', 50);
-              moverMotor('e', -50);
+    case 'e': moverMotor('d', 30);
+              moverMotor('e', -30);
               break;   
 
-    case 'f': moverMotor('d', 50);
-              moverMotor('e', 50);
+    case 'f': moverMotor('d', 30);
+              moverMotor('e', 30);
               break;             
   }
 
-  unsigned int tempo1=millis(), tempo2=millis();
-  while(millis()-tempo<=tempo){
-    
-    if(millis()-tempo2<=500){
-      switch(side){
-        case 'e': digitalWrite(ledPinE, LOW);
-                  break;
-                  
-        case 'd': digitalWrite(ledPinD, LOW);
-                  break;
-
-        case 'f': digitalWrite(ledPinD, LOW);
-                  digitalWrite(ledPinE, LOW);
-                  break;
-      }
-    }
-    else if(millis()-tempo2<=1000){
-      switch(side){
-        case 'e': digitalWrite(ledPinE, HIGH);
-                  break;
-                  
-        case 'd': digitalWrite(ledPinE, HIGH);
-                  break;
-
-        case 'f': digitalWrite(ledPinD, LOW);
-                  digitalWrite(ledPinE, LOW);
-                  break;          
-      }
-    }
-    else tempo2=millis();
-    
-  }
+  delay(tempo);
 }
 
 void desviarObstaculo(){
     stopMotors();
-
-    mover('e', 0);
+  
+    boostMotor('e', 't');
+    moverMotor('e', -40);
     while(calDist(true)<20);
-    mover('e', TEMPO/5);
+    delay(500);
     stopMotors();
 
-    mover('f', TEMPO);
+    boostMotor('e', 'f');
+    boostMotor('d', 'f');
+    moverMotor('d', 45);
+    moverMotor('e', 55);
+    delay(1000);
     stopMotors();
 
-    mover('d', TEMPO/2);
+    boostMotor('e', 'f');
+    moverMotor('e', 45);
+    delay(500);
     stopMotors();
 
-    mover('f', TEMPO);
+    delay(2000);
+
+    boostMotor('e', 'f');
+    boostMotor('d', 'f');
+    moverMotor('d', 45);
+    moverMotor('e', 45);
+    delay(500);
     stopMotors();
 
-    mover('e', TEMPO/5);
+    delay(2000);
+
+    boostMotor('e', 'f');
+    moverMotor('e', 45);
+    delay(200);
     stopMotors();
 
-    mover('f', 0);
+    delay(2000);
+
+    boostMotor('e', 'f');
+    boostMotor('d', 'f');
+    moverMotor('d', 45);
+    moverMotor('e', 55);
     while(valSensor()==1);
     stopMotors();
+
+    boostMotor('d', 'f');
+    moverMotor('d', 45);
+    delay(200);
+
+    while(valSensor()==1);    
 }
 
 int valSensor(){
@@ -210,8 +203,9 @@ int valSensor(){
 }
 
 void seguidorDeLinha(){
-  static int estado=0, velOutLine1=0, velOutLine2=50, velInLine1=0, velInLine2=30;
+  static int estado=0, velOutLine1=0, velOutLine2=65, velInLine1=0, velInLine2=45;
   static boolean darBoost=true;
+  static unsigned int tempo=millis();
   
   switch(estado){
     case 0: if(darBoost){
@@ -220,11 +214,21 @@ void seguidorDeLinha(){
       
               darBoost=false;
             }
-    
+
+            if(millis()-tempo>=500){
+              if(velOutLine2>velOutLine1) velOutLine2=35;
+              else velOutLine1=35;
+            }
+            
             moverMotor('e', velOutLine1);
             moverMotor('d', velOutLine2);
-    
-            if(valSensor()==0) estado=1;
+            
+            if(valSensor()==0){
+              estado=1;
+
+              if(velOutLine2>velOutLine1) velOutLine2=45;
+              else velOutLine1=45;
+            }
             
             break;
             
@@ -240,7 +244,7 @@ void seguidorDeLinha(){
 
               darBoost=true;
 
-              stopMotors();
+              tempo=millis();
             }
             
             break;
