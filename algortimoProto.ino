@@ -210,10 +210,18 @@ int valSensor(){
 }
 
 void seguidorDeLinha(){
-  static int estado=0, velOutLine1=0, velOutLine2=60, velInLine1=0, velInLine2=30;
+  static int estado=0, velOutLine1=0, velOutLine2=50, velInLine1=0, velInLine2=30;
+  static boolean darBoost=true;
   
   switch(estado){
-    case 0: moverMotor(velOutLine1, velOutLine2);
+    case 0: if(darBoost){
+              if(velOutLine2>velOutLine1) boostMotor('d', 'f');
+              else boostMotor('e', 'f');
+      
+              darBoost=false;
+            }
+    
+            moverMotor(velOutLine1, velOutLine2);
     
             if(valSensor()==0) estado=1;
             
@@ -227,6 +235,10 @@ void seguidorDeLinha(){
               swap(&velOutLine1, &velOutLine2);
 
               swap(&velInLine1, &velInLine2);
+
+              darBoost=true;
+
+              stopMotors();
             }
             
             break;
